@@ -6,7 +6,7 @@ Projeto de avaliação de Wikis
 
 Para criar os containers com o docker-compose e acessar a aplicação:
 
-1. cd ProjetoWikis/bookstack
+1. Entrar no diretório: `cd ProjetoWikis/bookstack`
 2. Criar volume de configurações do Bookstack: `docker volume create bookstack_config`
 3. Criar volume de dados para o MariaDB: `docker volume create bookstackdb_data`
 4. Criar a rede utilizada: `docker network create network-bookstack`
@@ -18,7 +18,7 @@ Para criar os containers com o docker-compose e acessar a aplicação:
 
 Para criar os containers com o docker-compose e acessar a aplicação:
 
-1. cd ProjetoWikis/wikijs
+1. Entrar no diretório: `cd ProjetoWikis/wikijs`
 2. Criar volume de configurações do Wikijs: `docker volume create wikijs_config`
 3. Criar volume de dados para o PostgreSQL: `docker volume create wikijsdb_data`
 4. Criar a rede utilizada:  `docker network create network-wikijs`
@@ -31,7 +31,7 @@ Para criar os containers com o docker-compose e acessar a aplicação:
 
 Para criar os containers com o docker-compose e acessar a aplicação:
 
-1. cd ProjetoWikis/wikijs
+1. Entrar no diretório: `cd ProjetoWikis/wikijs`
 2. Criar volume de configurações do Bookstack: `docker volume create xwiki_config`
 3. Criar volume de dados para o MariaDB: `docker volume create xwikidb_data`
 4. Criar a rede utilizada: `docker network create network-xwiki`
