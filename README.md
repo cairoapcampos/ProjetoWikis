@@ -31,7 +31,7 @@ Para criar os containers com o docker-compose e acessar a aplicação:
 
 Para criar os containers com o docker-compose e acessar a aplicação:
 
-1. Entrar no diretório: `cd ProjetoWikis/wikijs`
+1. Entrar no diretório: `cd ProjetoWikis/xwiki`
 2. Criar volume de configurações do Bookstack: `docker volume create xwiki_config`
 3. Criar volume de dados para o MariaDB: `docker volume create xwikidb_data`
 4. Criar a rede utilizada: `docker network create network-xwiki`
