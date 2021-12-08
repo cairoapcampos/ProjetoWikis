@@ -1,0 +1,81 @@
+################################
+# Wiki.js 2.5.254              #
+# Configuração: v1.0           #
+# Data: 05/12/21               #
+# Autor: Cairo Ap. Campos      #
+################################
+
+#-------------
+# Adaptado de:
+#-------------
+# https://docs.requarks.io/install/docker
+# https://hub.docker.com/r/requarks/wiki
+
+# --------------------------------------------------------------------
+# Para criar os containers com o docker-compose e acessar a aplicação:
+# --------------------------------------------------------------------
+# 1. Criar volume de configurações do Wikijs: docker volume create wikijs_config
+# 2. Criar volume de dados para o PostgreSQL: docker volume create wikijsdb_data
+# 3. Criar a rede utilizada:  docker network create network-wikijs
+# 4. Criar os container em background: docker-compose up -d
+# 5. Ver os logs: docker-compose logs
+# 6. Acesso: http://IP:porta (Usuario e senha criados no primeiro acesso)
+
+#-----------------------
+# Outros comandos uteis:
+#-----------------------
+# 1. Listar todos os containers: docker-compose ps -a
+# 2. Iniciar os containers: docker-compose start
+# 3. Parar os containers: docker-compose stop
+# 4. Apagar todos containers criados: docker-compose rm
+
+version: "3"
+services:
+
+  postgresql:
+    container_name: cont-wikijsdb-01
+    hostname: cont-wikijsdb-01
+    restart: always
+    volumes:
+      - wikijsdb_data:/var/lib/postgresql/data
+    networks: 
+      - default
+    environment:
+      POSTGRES_DB: wikidb
+      POSTGRES_PASSWORD: wikipass
+      POSTGRES_USER: wikiuser
+    logging:
+      driver: "none"
+    image: postgres:11-bullseye
+
+  wikijs:
+    ports:
+        - 8082:3000
+    container_name: cont-wikijs-01
+    hostname: cont-wikijs-01
+    restart: always
+    volumes:
+      - wikijs_config:/wiki/data/content
+    networks: 
+      - default
+    environment:
+      DB_TYPE: postgres
+      DB_HOST: cont-wikijsdb-01
+      DB_PORT: 5432
+      DB_USER: wikiuser
+      DB_PASS: wikipass
+      DB_NAME: wikidb
+    depends_on:
+      - postgresql
+    image: requarks/wiki:2
+
+volumes:
+  wikijs_config:
+   external: true
+  wikijsdb_data:
+   external: true
+
+networks:
+ default:
+  external:
+   name: network-wikijs

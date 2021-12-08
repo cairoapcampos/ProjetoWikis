@@ -1,0 +1,80 @@
+################################
+# XWiki 12.10.10               #
+# Configuração: v1.0           #
+# Data: 05/12/21               #
+# Autor: Cairo Ap. Campos      #
+################################
+
+#-------------
+# Adaptado de:
+#-------------
+# https://github.com/xwiki/xwiki-docker
+# https://hub.docker.com/_/xwiki
+
+# --------------------------------------------------------------------
+# Para criar os containers com o docker-compose e acessar a aplicação:
+# --------------------------------------------------------------------
+# 1. Criar volume de configurações do Bookstack: docker volume create xwiki_config
+# 2. Criar volume de dados para o MariaDB: docker volume create xwikidb_data
+# 3. Criar a rede utilizada: docker network create network-xwiki
+# 4. Na pasta do docker-compose.yml baixar: wget https://raw.githubusercontent.com/xwiki-contrib/docker-xwiki/master/12/mysql-tomcat/mysql/xwiki.cnf
+# 5. Na pasta do docker-compose.yml baixar: wget https://raw.githubusercontent.com/xwiki-contrib/docker-xwiki/master/12/mysql-tomcat/mysql/init.sql
+# 6. Criar os containers em background: docker-compose up -d
+# 7. Ver os logs: docker-compose logs
+# 8. Acesso: http://IP:porta (Usuario e senha criados durante a configuração)
+
+#-----------------------
+# Outros comandos uteis:
+#-----------------------
+# 1. Listar todos os containers: docker-compose ps -a
+# 2. Iniciar os containers: docker-compose start
+# 3. Parar os containers: docker-compose stop
+# 4. Apagar todos containers criados: docker-compose rm
+
+version: '2'
+services:
+  xwiki:
+    ports:
+      - "8080:8080"
+    container_name: cont-xwiki-01
+    hostname: cont-xwiki-01
+    restart: always
+    volumes:
+      - xwiki_config:/usr/local/xwiki
+    networks:
+      - default
+    environment:
+      - DB_USER=xwiki
+      - DB_PASSWORD=xwiki
+      - DB_HOST=cont-xwikidb-01
+    depends_on:
+      - mysql
+    image: "xwiki:lts-mysql-tomcat"
+
+  mysql:
+    container_name: cont-xwikidb-01
+    hostname: cont-xwikidb-01
+    restart: always
+    volumes:
+      - ./xwiki.cnf:/etc/mysql/conf.d/xwiki.cnf
+      - xwikidb_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - default
+    environment:
+      - MYSQL_ROOT_PASSWORD=xwiki
+      - MYSQL_USER=xwiki
+      - MYSQL_PASSWORD=xwiki
+      - MYSQL_DATABASE=xwiki
+    image: "mysql:5.7"
+
+volumes:
+  xwiki_config:
+    external: true
+  xwikidb_data:
+    external: true
+
+networks:
+ default:
+  external:
+   name: network-xwiki

@@ -1,0 +1,83 @@
+################################
+# BookStack 21.11.2            #
+# Configuração: v1.0           #
+# Data: 05/12/21               #
+# Autor: Cairo Ap. Campos      #
+################################
+
+#-------------
+# Adaptado de:
+#-------------
+# https://github.com/linuxserver/docker-bookstack
+# https://hub.docker.com/r/linuxserver/bookstack
+
+# --------------------------------------------------------------------
+# Para criar os containers com o docker-compose e acessar a aplicação:
+# --------------------------------------------------------------------
+# 1. Criar volume de configurações do Bookstack: docker volume create bookstack_config
+# 2. Criar volume de dados para o MariaDB: docker volume create bookstackdb_data
+# 3. Criar a rede utilizada: docker network create network-bookstack
+# 4. Criar os container em background: docker-compose up -d
+# 5. Ver os logs: docker-compose logs
+# 6. Acesso: http://IP:porta (Usuario: admin@admin.com / Senha: password)
+
+#-----------------------
+# Outros comandos uteis:
+#-----------------------
+# 1. Listar todos os containers: docker-compose ps -a
+# 2. Iniciar os containers: docker-compose start
+# 3. Parar os containers: docker-compose stop
+# 4. Apagar todos containers criados: docker-compose rm
+
+version: "2"
+services:
+   bookstack:
+     ports:
+        - 8081:80
+     container_name: cont-bookstack-01
+     hostname: cont-bookstack-01
+     restart: always
+     volumes:
+        - bookstack_config:/config
+     networks:
+       - default
+     environment:
+       - PUID=1000
+       - PGID=1000
+       - APP_URL=
+       - DB_HOST=cont-bookstackdb-01
+       - DB_USER=wikiuser
+       - DB_PASS=wikipass
+       - DB_DATABASE=wikidb
+     depends_on:
+       - mariadb
+     image: lscr.io/linuxserver/bookstack
+  
+   mariadb:
+     container_name: cont-bookstackdb-01
+     hostname: cont-bookstackdb-01
+     restart: always
+     volumes:
+        - bookstackdb_data:/config
+     networks:
+        - default
+     environment:
+        - PUID=1000
+        - PGID=1000
+        - MYSQL_ROOT_PASSWORD=rootpass
+        - TZ=America/Sao_Paulo
+        - MYSQL_DATABASE=wikidb
+        - MYSQL_USER=wikiuser
+        - MYSQL_PASSWORD=wikipass
+     image: lscr.io/linuxserver/mariadb
+
+volumes:
+  bookstack_config:
+   external: true
+  bookstackdb_data:
+   external: true
+
+networks:
+ default:
+  external:
+   name: network-bookstack
