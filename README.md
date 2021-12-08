@@ -1,6 +1,6 @@
 # ProjetoWikis
 
-Projeto de avaliação de Wikis
+Projeto de avaliação de Wikis usando containers Docker.
 
 ## BookStack
 
