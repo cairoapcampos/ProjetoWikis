@@ -54,8 +54,6 @@ services:
     container_name: cont-wikijs-01
     hostname: cont-wikijs-01
     restart: always
-    volumes:
-      - wikijs_config:/wiki/data/content
     networks: 
       - default
     environment:
